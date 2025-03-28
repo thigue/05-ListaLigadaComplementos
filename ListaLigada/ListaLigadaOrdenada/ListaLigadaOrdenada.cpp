@@ -70,7 +70,7 @@ void menu()
 
 void inicializar()
 {
-	// se a lista j� possuir elementos
+	// se a lista já possuir elementos
 // libera a memoria ocupada
 	NO* aux = primeiro;
 	while (aux != NULL) {
@@ -114,30 +114,46 @@ void exibirElementos()
 
 void inserirElemento()
 {
-	// aloca memoria dinamicamente para o novo elemento
-	NO* novo = (NO*)malloc(sizeof(NO));
-	if (novo == NULL)
-	{
-		return;
-	}
+    NO* novo = (NO*)malloc(sizeof(NO));
+    if (novo == NULL)
+    {
+        cout << "Erro ao alocar memória" << endl;
+        return;
+    }
 
-	cout << "Digite o elemento: ";
-	cin >> novo->valor;
-	novo->prox = NULL;
+    cout << "Digite o elemento: ";
+    cin >> novo->valor;
+    novo->prox = NULL;
 
-	if (primeiro == NULL)
-	{
-		primeiro = novo;
-	}
-	else
-	{
-		// procura o final da lista
-		NO* aux = primeiro;
-		while (aux->prox != NULL) {
-			aux = aux->prox;
-		}
-		aux->prox = novo;
-	}
+    if (primeiro == NULL) {
+        primeiro = novo;
+    }
+    else {
+        NO* aux = primeiro;
+        while (aux != NULL) {
+            if (aux->valor == novo->valor) {
+                cout << "Elemento duplicado não pode ser inserido!" << endl;
+                free(novo); 
+                return;
+            }
+            aux = aux->prox;
+        }
+
+        if (novo->valor < primeiro->valor) {
+            novo->prox = primeiro;
+            primeiro = novo;
+        }
+        else {
+            aux = primeiro;
+            while (aux->prox != NULL && aux->prox->valor < novo->valor) {
+                aux = aux->prox;
+            }
+            novo->prox = aux->prox;
+            aux->prox = novo;
+        }
+    }
+
+    cout << "Elemento inserido com sucesso!" << endl;
 }
 
 void excluirElemento()
@@ -147,7 +163,22 @@ void excluirElemento()
 
 void buscarElemento()
 {
+    int valor;
+    cout << "Digite o valor a ser buscado: ";
+    cin >> valor;
 
+    NO* aux = primeiro;
+    while (aux != NULL) {
+        if (aux->valor == valor) {
+            cout << "Elemento " << valor << " encontrado na lista!" << endl;
+            return;
+        }
+        if (aux->valor > valor) {
+            break;
+        }
+        aux = aux->prox;
+    }
+
+    cout << "Elemento " << valor << " não encontrado na lista!" << endl;
 }
-
 
